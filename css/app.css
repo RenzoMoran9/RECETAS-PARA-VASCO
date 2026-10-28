@@ -678,3 +678,16 @@ details.acc li::before { content: ''; position: absolute; left: 2px; top: 0.6em;
   padding-block: 12px calc(20px + env(safe-area-inset-bottom, 0px));
   background: linear-gradient(to bottom, transparent, var(--bg) 14px);
 }
+
+.link-box { display: grid; gap: 8px; }
+.link-box code {
+  display: block;
+  padding: 10px 12px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+details.acc.help { box-shadow: none; background: var(--surface-2); }
+details.acc.help summary { font-size: 1rem; }

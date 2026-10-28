@@ -1,5 +1,5 @@
 /* Guarda la app en el teléfono para que funcione sin internet. */
-const VERSION = 'vasco-v1';
+const VERSION = 'vasco-v2';
 const APP = [
   './',
   'index.html',
@@ -12,6 +12,7 @@ const APP = [
   'js/app.js',
   'manifest.webmanifest',
   'img/icon.svg',
+  'img/icon-maskable-512.png',
   'img/icon-192.png',
   'img/icon-512.png',
   'img/apple-touch-icon.png',

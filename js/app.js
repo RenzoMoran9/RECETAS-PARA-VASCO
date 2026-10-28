@@ -51,6 +51,31 @@
   const nombre = () => (S.settings.nombre || 'Vasco').trim() || 'Vasco';
   const hora = (key) => S.settings.horas[key] || TIEMPOS.find((t) => t.key === key).hora;
 
+  /* ---------- Instalación ---------- */
+  // La dirección distingue mayúsculas: en minúsculas GitHub muestra "Site not found"
+  const APP_URL = /\.github\.io$/.test(location.hostname)
+    ? location.origin + location.pathname
+    : 'https://renzomoran9.github.io/RECETAS-PARA-VASCO/';
+  const UA = navigator.userAgent;
+  const isIOS = /iphone|ipad|ipod/i.test(UA);
+  const isStandalone = () =>
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  // Navegadores dentro de otras apps (WhatsApp, Facebook, Instagram…): ahí no se puede instalar
+  const inAppBrowser = () => /; wv\)|FBAN|FBAV|FB_IAB|Instagram|WhatsApp|Line\/|Messenger|TikTok|Snapchat|GSA\//i.test(UA);
+  const linkBox = () =>
+    `<div class="link-box"><code>${APP_URL}</code><button class="btn soft" data-act="copy-link">Copiar enlace</button></div>`;
+  function installHelp() {
+    return `<details class="acc help">
+      <summary><span class="ing-ico">${V.icon('agua', 32)}</span><span>¿Sale «No se pudo abrir la aplicación»?</span><span class="chev">${V.ui('atras', 18).replace('<svg', '<svg style="transform:scaleX(-1)"')}</span></summary>
+      <ul>
+        <li><b>Ábrela directo en ${isIOS ? 'Safari' : 'Chrome'}</b>, no desde WhatsApp, Facebook ni la app de Claude. Copia el enlace y pégalo en la barra de direcciones. Escríbelo tal cual, con mayúsculas.</li>
+        <li><b>Si ya la habías instalado</b>, mantén presionado el ícono, elige <b>Desinstalar</b> o <b>Quitar</b>, y vuelve a instalarla.</li>
+        ${isIOS ? '' : '<li><b>En Xiaomi, Redmi o POCO:</b> Ajustes → Aplicaciones → Chrome → Permisos → activa <b>Accesos directos en la pantalla de inicio</b>. Luego instala otra vez.</li>'}
+        ${isIOS ? '' : '<li><b>Plan B que siempre funciona:</b> en Chrome toca <b>⋮</b> → <b>Agregar a la pantalla principal</b> → <b>Crear acceso directo</b>. Queda el ícono y se abre en Chrome.</li>'}
+      </ul>
+    </details>`;
+  }
+
   /* ---------- Utilidades ---------- */
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -221,8 +246,13 @@
            <div class="btn-row"><button class="btn primary" data-act="install">${V.ui('instalar', 18)} Instalar</button><button class="btn soft" data-act="install-hide">Ahora no</button></div></section>`
         : '';
 
+    const inApp =
+      inAppBrowser() && !isStandalone()
+        ? `<section class="notice"><h2>Ábrela en ${isIOS ? 'Safari' : 'Chrome'} para instalarla</h2>
+            <p>Estás viendo la app dentro de otra aplicación, y desde aquí no se puede instalar. Copia el enlace y pégalo en ${isIOS ? 'Safari' : 'Chrome'}.</p>${linkBox()}</section>`
+        : '';
     view.innerHTML = `<div class="stack">
-      ${welcome}${install}
+      ${inApp}${welcome}${install}
       <section aria-label="Semana">
         <div class="week-nav">
           <button class="icon-btn" data-act="week" data-d="-1" aria-label="Semana anterior" ${off <= -1 ? 'disabled' : ''}>${V.ui('atras', 20)}</button>
@@ -548,8 +578,8 @@
 
   /* ---------- Ajustes ---------- */
   function renderAjustes() {
-    const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    const standalone = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+    const ios = isIOS;
+    const standalone = isStandalone();
     view.innerHTML = `<div class="stack">
       <div><h1 class="view-title">Ajustes</h1><p class="view-sub">Se guardan solo en este celular.</p></div>
       <section class="block">
@@ -579,7 +609,7 @@
           ios
             ? '<li>Abre esta página en <b>Safari</b>.</li><li>Toca el botón <b>Compartir</b> (el cuadrado con la flecha).</li><li>Elige <b>Agregar a pantalla de inicio</b>.</li>'
             : '<li>Abre esta página en <b>Chrome</b>.</li><li>Toca el menú <b>⋮</b> arriba a la derecha.</li><li>Elige <b>Instalar app</b> o <b>Agregar a pantalla principal</b>.</li>'
-        }</ol><p class="hint">Después la abres desde el ícono y funciona aun sin internet.</p>` : ''}
+        }</ol><p class="hint">Después la abres desde el ícono y funciona aun sin internet. Este es el enlace para abrir en cada celular:</p>${linkBox()}${installHelp()}` : ''}
       </section>
       <section class="block">
         <h2>Empezar de cero</h2>
@@ -882,6 +912,21 @@
           ta.select();
           toast('Selecciona y copia el texto');
         }
+        break;
+      }
+      case 'copy-link': {
+        const done = () => toast('Enlace copiado: pégalo en ' + (isIOS ? 'Safari' : 'Chrome'));
+        const fail = () => {
+          const code = el.parentElement.querySelector('code');
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          toast('Mantén presionado el enlace para copiarlo');
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(APP_URL).then(done, fail);
+        else fail();
         break;
       }
       case 'horas-reset':
