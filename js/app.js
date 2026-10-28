@@ -40,11 +40,16 @@
       return base;
     }
   }
+  let storageWarned = false;
   function save() {
     try {
       localStorage.setItem(KEY, JSON.stringify(S));
     } catch (e) {
-      /* sin almacenamiento: la app sigue funcionando en esta sesión */
+      // Sin espacio (o sin permiso): la app sigue funcionando, pero avisamos una vez
+      if (!storageWarned) {
+        storageWarned = true;
+        setTimeout(() => toast('El celular no tiene espacio: tus cambios no se guardarán'), 0);
+      }
     }
   }
   const prefs = () => ({ favorites: S.favorites, reactions: S.reactions, avoid: S.settings.avoid });
@@ -70,6 +75,7 @@
       <ul>
         <li><b>Ábrela directo en ${isIOS ? 'Safari' : 'Chrome'}</b>, no desde WhatsApp, Facebook ni la app de Claude. Copia el enlace y pégalo en la barra de direcciones. Escríbelo tal cual, con mayúsculas.</li>
         <li><b>Si ya la habías instalado</b>, mantén presionado el ícono, elige <b>Desinstalar</b> o <b>Quitar</b>, y vuelve a instalarla.</li>
+        <li><b>Revisa el espacio libre.</b> La app pesa menos de 300 KB, pero si el celular está casi lleno no puede instalar nada. Libera espacio (videos de WhatsApp, fotos ya respaldadas, apps que no usas) y vuelve a intentar.</li>
         ${isIOS ? '' : '<li><b>En Xiaomi, Redmi o POCO:</b> Ajustes → Aplicaciones → Chrome → Permisos → activa <b>Accesos directos en la pantalla de inicio</b>. Luego instala otra vez.</li>'}
         ${isIOS ? '' : '<li><b>Plan B que siempre funciona:</b> en Chrome toca <b>⋮</b> → <b>Agregar a la pantalla principal</b> → <b>Crear acceso directo</b>. Queda el ícono y se abre en Chrome.</li>'}
       </ul>

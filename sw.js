@@ -1,5 +1,5 @@
 /* Guarda la app en el teléfono para que funcione sin internet. */
-const VERSION = 'vasco-v2';
+const VERSION = 'vasco-v3';
 const APP = [
   './',
   'index.html',
