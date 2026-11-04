@@ -93,7 +93,7 @@
       higado: 'Corta el hígado en tiras y saltéalo 3 minutos, hasta que no quede rosado.',
       pescado: 'Corta el pescado en cubos y dóralo con cuidado 3 minutos; resérvalo.',
       trucha: 'Corta la trucha en cubos y dórala con cuidado 3 minutos; resérvala.',
-      atun: 'Escurre el atún y saltéalo 1 minuto con el ajo.',
+      atun: 'Escurre el atún y saltéalo 1 minuto.',
       huevo: 'Revuelve los huevos batidos en la sartén con unas gotas de aceite, pícalos y resérvalos.',
       champinon: 'Lamina los champiñones y saltéalos a fuego fuerte hasta que doren.',
       queso: 'Corta el queso fresco en cubitos; lo agregas al final.',
@@ -139,12 +139,10 @@
     pasos: (p, c) => {
       const verd = p.verd.filter((x) => x !== 'cebolla-china');
       return [
-        p.base[0] === 'quinua'
-          ? 'Usa 3 tazas de quinua cocida y bien escurrida.'
-          : 'Usa 3 tazas de arroz cocido, mejor si es del día anterior y está frío.',
+        `Usa ${c.bebe ? '3 cucharadas' : '3 tazas'} de ${p.base[0] === 'quinua' ? 'quinua cocida y bien escurrida' : 'arroz cocido, mejor si es del día anterior y está frío'}.`,
         p.huevo.length && p.prot[0] !== 'huevo' ? 'Bate los huevos, haz una tortilla delgada, córtala en tiras y resérvala.' : '',
+        `En una sartén con aceite, dora el ajo picado${p.kion.length ? ' y el kion rallado' : ''}.`,
         COCCION.saltear[p.prot[0]],
-        p.kion.length ? 'Agrega el kion rallado y el ajo picado.' : 'Agrega el ajo picado.',
         verd.length ? `Suma ${lista(verd)} en trocitos y saltea 2 minutos.` : '',
         `Agrega ${p.base[0] === 'quinua' ? 'la quinua' : 'el arroz'} y mueve a fuego fuerte 3 minutos.${c.bebe ? ' Sin sillao: tiene mucha sal.' : ' Echa 2 cucharadas de sillao.'}`,
         `Termina con ${p.verd.includes('cebolla-china') ? 'la cebolla china picada' : 'cebolla en tiras finas'}${p.huevo.length && p.prot[0] !== 'huevo' ? ' y las tiras de tortilla' : ''}.`,
@@ -418,7 +416,7 @@
       const pr = p.prot[0];
       const b = p.base[0];
       return [
-        `Hierve 5 tazas de agua con la cebolla y el ajo picados${p.kion.length ? ' y el kion' : ''}.`,
+        `Hierve ${c.bebe ? '2 tazas' : '5 tazas'} de agua con la cebolla y el ajo picados${p.kion.length ? ' y el kion' : ''}.`,
         pr === 'pollo' || pr === 'res' ? `Agrega ${pr === 'pollo' ? 'el pollo' : 'la carne'} en trozos y cocina 15 minutos.` : '',
         p.verd.filter((x) => x !== b).length ? `Suma ${lista(p.verd.filter((x) => x !== b))} en cubitos y cocina 10 minutos.` : '',
         b === 'fideos' ? 'Agrega los fideos y cocina 8 minutos.' : b === 'quinua' ? 'Agrega la quinua lavada y cocina 15 minutos.' : b === 'arroz' ? 'Agrega 1/2 taza de arroz y cocina 15 minutos.' : 'Agrega la papa en cubos y cocina 15 minutos.',
@@ -620,8 +618,8 @@
     opt: [{ k: 'avena', de: ['avena'] }],
     basicos: [],
     nombre: (p) => `Batido de ${lista(p.fruta)}${p.avena.length ? ' y avena' : ''}`,
-    pasos: (p) => [
-      `Licúa la fruta (${lista(p.fruta)}) con ${p.lacteo[0] === 'yogurt' ? '1 taza de yogurt' : '2 tazas de leche'}${p.avena.length ? ' y 3 cucharadas de avena' : ''}.`,
+    pasos: (p, c) => [
+      `Licúa la fruta (${lista(p.fruta)}) con ${p.lacteo[0] === 'yogurt' ? (c.bebe ? '1/2 taza' : '1 taza') + ' de yogurt' : (c.bebe ? '1/2 taza' : '2 tazas') + ' de leche'}${p.avena.length ? ` y ${c.bebe ? '1 cucharada' : '3 cucharadas'} de avena` : ''}.`,
       'Sirve sin azúcar: la fruta madura ya endulza.',
     ],
     tip: () => 'Con la fruta entera llena más que un jugo.',
@@ -640,8 +638,8 @@
     opt: [{ k: 'fruta', de: ['platano', 'manzana', 'pera', 'fresa', 'papaya', 'mango', 'lucuma'], max: 2 }],
     basicos: ['canela'],
     nombre: (p) => `${cap(nom(p.grano[0]))} con ${p.fruta.length ? lista(p.fruta) : 'leche y canela'}`,
-    pasos: (p) => [
-      p.grano[0] === 'avena' ? 'Cocina la avena en 1 taza de agua con la canela por 5 minutos.' : `Lava la ${nom(p.grano[0])} y cocínala en el doble de agua con la canela por 15 a 20 minutos.`,
+    pasos: (p, c) => [
+      p.grano[0] === 'avena' ? `Cocina la avena en ${c.bebe ? '1/2 taza' : '1 taza'} de agua con la canela por 5 minutos.` : `Lava la ${nom(p.grano[0])} y cocínala en el doble de agua con la canela por 15 a 20 minutos.`,
       'Agrega la leche y cocina 3 minutos más.',
       p.fruta.length ? `Sirve con ${lista(p.fruta)} picado: endulza sin azúcar.` : 'Sirve tibia, sin azúcar.',
     ],
@@ -752,7 +750,12 @@
         ing,
         pasos,
         tip: t.tip(p, c),
-        vascoNota: t.vasco && opts.para !== 'papas' ? t.vasco + (usados.has('atun') ? ' El atún en lata, bien escurrido y enjuagado, no más de 1 o 2 veces por semana.' : '') : '',
+        // «Los dos»: cómo separar su porción. Solo Vasco: la receta ya viene sin sal; recuerda la textura
+        vascoNota:
+          opts.para === 'papas'
+            ? ''
+            : (opts.para === 'ambos' ? t.vasco : 'Sírvelo tibio y en trocitos pequeños para que practique a masticar.') +
+              (usados.has('atun') ? ' El atún en lata, bien escurrido y enjuagado, no más de 1 o 2 veces por semana.' : ''),
         usa: deRefri,
         faltan,
         n: deRefri.length,

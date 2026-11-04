@@ -1,5 +1,5 @@
 /* Guarda la app en el teléfono para que funcione sin internet. */
-const VERSION = 'familia-v5';
+const VERSION = 'familia-v6';
 const APP = [
   './',
   'index.html',

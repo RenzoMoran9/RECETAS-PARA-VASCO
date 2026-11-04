@@ -131,8 +131,8 @@ Es HTML, CSS y JavaScript sin dependencias ni compilación.
 | `sw.js` | Funcionamiento sin internet |
 
 Para probarla en la computadora, ejecuta `python3 -m http.server` en esta carpeta y abre
-`http://localhost:8000`. Al cambiar archivos, sube la versión en `sw.js` (`familia-v5` →
-`familia-v6`) para que los celulares reciban la actualización.
+`http://localhost:8000`. Al cambiar archivos, sube la versión en `sw.js` (`familia-v6` →
+`familia-v7`) para que los celulares reciban la actualización.
 
 Herramientas de desarrollo en `tools/` (necesitan Node y Playwright):
 
