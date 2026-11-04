@@ -1,5 +1,5 @@
 /* Guarda la app en el teléfono para que funcione sin internet. */
-const VERSION = 'familia-v4';
+const VERSION = 'familia-v5';
 const APP = [
   './',
   'index.html',
@@ -11,6 +11,7 @@ const APP = [
   'js/papas.js',
   'js/planner.js',
   'js/cocina.js',
+  'js/ideas.js',
   'js/app.js',
   'manifest.webmanifest',
   'img/icon.svg',

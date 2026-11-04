@@ -35,6 +35,7 @@
     refri: [],
     basicos: null,
     refriPara: 'papas',
+    ideas: [],
     welcomed: false,
     novedades2: false,
     installHidden: false,
@@ -181,6 +182,7 @@
     shopWeek: weekKey(today()),
     shopFor: 'familia',
     refriMas: { listos: false, casi: false },
+    ideas: {},
   };
   const weekOffset = () => Math.round((V.parseDate(ui.week) - V.mondayOf(today())) / (7 * 864e5));
 
@@ -639,6 +641,10 @@
       .join('');
     if (texto && !ids.length) box.innerHTML = '<p class="hint">No encuentro ese ingrediente. Prueba con otro nombre.</p>';
   }
+  const missRow = (ids) =>
+    `<div class="match-miss"><span class="miss-label">Te falta:</span>${ids
+      .map((id) => `<span class="miss">${V.icon(id, 20)}${esc(corto(id))}</span>`)
+      .join('')}<button class="chip-btn" data-act="refri-falta" data-ids="${ids.join(',')}">${V.ui('mas', 14)} A la lista</button></div>`;
   function matchCard(x) {
     const r = x.r;
     const usa = x.usa.map(corto).concat(x.subs.map(([, sub]) => corto(sub)));
@@ -654,13 +660,45 @@
           ${x.olla ? `<span class="hint">Misma olla: también sale «${esc(x.olla.r.nombre)}» para ${esc(nombre())}.</span>` : ''}
         </span>
       </a>
-      ${x.faltan.length
-        ? `<div class="match-miss"><span class="miss-label">Te falta:</span>${x.faltan
-            .map((id) => `<span class="miss">${V.icon(id, 20)}${esc(corto(id))}</span>`)
-            .join('')}<button class="chip-btn" data-act="refri-falta" data-ids="${x.faltan.join(',')}">${V.ui('mas', 14)} A la lista</button></div>`
+      ${x.faltan.length ? missRow(x.faltan) : ''}
+    </li>`;
+  }
+  // Plato armado por el generador (no está en el recetario)
+  function ideaCard(i, guardada) {
+    return `<li class="match">
+      <button class="match-main" data-act="idea-open" data-id="${i.id}">
+        <span class="opt-art" data-tipo="${i.tipo[0]}">${dish(i)}</span>
+        <span class="opt-body">
+          <b>${esc(i.nombre)}</b>
+          <span class="meta"><span class="badge idea">${V.ui('chispa', 12)}Idea nueva</span>${i.min} min</span>
+          <span class="uses">${guardada ? 'Toca para ver la receta' : `Usas ${esc(enLista(i.usa.map(corto)))}`}</span>
+        </span>
+      </button>
+      ${guardada
+        ? `<div class="match-miss"><button class="chip-btn" data-act="idea-del" data-id="${i.id}">${V.ui('cerrar', 14)} Quitar</button></div>`
+        : i.faltan.length
+        ? missRow(i.faltan)
         : ''}
     </li>`;
   }
+  const avoidPara = (para) => (para === 'ambos' ? [...new Set(avoidDe('papas').concat(avoidDe('vasco')))] : avoidDe(para));
+  const preguntaIA = () =>
+    V.preguntaIA({ tengo: S.refri, basicos: basicos(), para: S.refriPara, edad: edadTexto(), avoid: avoidPara(S.refriPara) });
+  function iaBlock() {
+    return `<section class="block plain" aria-labelledby="ia-t">
+      <h2 id="ia-t">¿Quieres más ideas?</h2>
+      <p class="hint">Armo la pregunta con lo que tienes para que se la hagas a Claude. Necesita internet.</p>
+      <div class="btn-row">
+        <a class="btn soft" href="https://claude.ai/new?q=${encodeURIComponent(preguntaIA())}" target="_blank" rel="noopener">${V.ui('chispa', 18)} Preguntar a Claude</a>
+        <button class="btn soft" data-act="ia-copy">Copiar la pregunta</button>
+      </div>
+    </section>`;
+  }
+  const guardadasBlock = () =>
+    S.ideas.length
+      ? `<section aria-labelledby="guard"><h2 class="sec-title" id="guard">Tus ideas guardadas <span class="count">${S.ideas.length}</span></h2>
+          <ul class="match-list">${S.ideas.map((i) => ideaCard(i, true)).join('')}</ul></section>`
+      : '';
   function renderRefriRes() {
     const box = $('#refri-res');
     if (!box) return;
@@ -670,29 +708,85 @@
         <div class="ejemplos">${EJEMPLOS.map(
           (ids) => `<button class="ejemplo" data-act="refri-ejemplo" data-ids="${ids.join(',')}"><span class="ej-icons">${ids.map((id) => V.icon(id, 30)).join('')}</span>${esc(enLista(ids.map(corto)))}</button>`
         ).join('')}</div>
-      </section>`;
+      </section>${guardadasBlock()}`;
       return;
     }
-    const perfiles = S.refriPara === 'ambos' ? ['papas', 'vasco'] : [S.refriPara];
-    const { listos, casi } = V.cocinar({ tengo: S.refri, basicos: basicos(), perfiles, prefsDe });
+    const para = S.refriPara;
+    const perfiles = para === 'ambos' ? ['papas', 'vasco'] : [para];
+    const rec = V.cocinar({ tengo: S.refri, basicos: basicos(), perfiles, prefsDe });
+    const ideas = V.inventar({ tengo: S.refri, basicos: basicos(), para, avoid: avoidPara(para), ahora: today() });
+    ui.ideas = {};
+    ideas.listos.concat(ideas.casi).forEach((i) => {
+      i.para = para;
+      ui.ideas[i.id] = i;
+    });
+    // Recetas de la app e ideas nuevas juntas: primero lo que usa más cosas de tu refri
+    const mezclar = (recetas, inventadas) =>
+      recetas
+        .map((x) => ({ x, k: 0 }))
+        .concat(inventadas.map((x) => ({ x, k: 1 })))
+        .sort((a, b) => b.x.n - a.x.n || a.x.faltan.length - b.x.faltan.length || a.k - b.k || b.x.score - a.x.score)
+        .map((o) => o.x);
+    const ya = mezclar(rec.listos, ideas.listos);
+    const poco = mezclar(rec.casi, ideas.casi);
     const lista = (items, k) => {
-      const ver = ui.refriMas[k] ? items.slice(0, 12) : items.slice(0, 3);
-      const resto = Math.min(items.length, 12) - ver.length;
-      return `<ul class="match-list">${ver.map(matchCard).join('')}</ul>
+      const ver = ui.refriMas[k] ? items.slice(0, 15) : items.slice(0, 3);
+      const resto = Math.min(items.length, 15) - ver.length;
+      return `<ul class="match-list">${ver.map((x) => (x.idea ? ideaCard(x) : matchCard(x))).join('')}</ul>
         ${resto > 0 ? `<button class="btn ghost wide" data-act="refri-mas" data-k="${k}">Ver ${resto} ${resto === 1 ? 'opción más' : 'opciones más'}</button>` : ''}`;
     };
-    if (!listos.length && !casi.length) {
-      box.innerHTML = `<div class="empty">${V.icon('huevo', 64)}<p>Con eso todavía no armo un plato. Agrega una proteína (pollo, huevo, pescado, carne o menestras) y alguna verdura.</p></div>`;
+    if (!ya.length && !poco.length) {
+      box.innerHTML = `<div class="empty">${V.icon('huevo', 64)}<p>Con eso todavía no armo un plato. Agrega una proteína (pollo, huevo, pescado, carne o menestras), un acompañamiento (arroz, fideos, papa) o alguna verdura.</p></div>${iaBlock()}${guardadasBlock()}`;
       return;
     }
     box.innerHTML = `
-      ${listos.length
-        ? `<section aria-labelledby="ya"><h2 class="sec-title" id="ya">Puedes preparar ya <span class="count">${listos.length}</span></h2>${lista(listos, 'listos')}</section>`
+      ${ya.length
+        ? `<section aria-labelledby="ya"><h2 class="sec-title" id="ya">Puedes preparar ya <span class="count">${ya.length}</span></h2>
+           <p class="hint">Recetas de la app e ideas nuevas armadas con lo que tienes.</p>${lista(ya, 'listos')}</section>`
         : `<p class="hint">Aún no hay un plato completo con lo que marcaste. Mira lo que te falta abajo.</p>`}
-      ${casi.length
-        ? `<section aria-labelledby="poco"><h2 class="sec-title" id="poco">Te falta poco <span class="count">${casi.length}</span></h2>
-           <p class="hint">Platos para los que te faltan 1 o 2 ingredientes. Toca «A la lista» para anotarlos.</p>${lista(casi, 'casi')}</section>`
-        : ''}`;
+      ${poco.length
+        ? `<section aria-labelledby="poco"><h2 class="sec-title" id="poco">Te falta poco <span class="count">${poco.length}</span></h2>
+           <p class="hint">Platos para los que te faltan 1 o 2 ingredientes. Toca «A la lista» para anotarlos.</p>${lista(poco, 'casi')}</section>`
+        : ''}
+      ${iaBlock()}${guardadasBlock()}`;
+  }
+  function openIdea(id) {
+    const i = ui.ideas[id] || S.ideas.find((x) => x.id === id);
+    if (!i) return;
+    const guardada = S.ideas.some((x) => x.id === id);
+    const bebe = i.para === 'vasco';
+    const tag = (nota) =>
+      nota === 'te falta'
+        ? '<span class="tag-falta">Te falta</span>'
+        : nota === 'en tu refri'
+        ? '<span class="en-refri">En tu refri</span>'
+        : '<span class="tag-desp">Despensa</span>';
+    openSheet(`<div class="sheet-head"><div><span class="eyebrow">Idea nueva · ${i.min} min · ${bebe ? 'Para ' + esc(nombre()) : i.para === 'ambos' ? 'Para los dos' : 'Para los papás'}</span>
+        <h2 id="sheet-title">${esc(i.nombre)}</h2></div>
+        <button class="icon-btn" data-act="close-sheet" aria-label="Cerrar">${V.ui('cerrar', 20)}</button></div>
+      <div class="idea-art" data-tipo="${i.tipo[0]}">${dish(i)}</div>
+      <section class="block">
+        <h2>Ingredientes</h2>
+        <p class="hint">${bebe ? `Para una porción de ${esc(nombre())}.` : 'Para 2 personas.'}</p>
+        <ul class="ing-list">${i.ing
+          .map(
+            ([iid, q, nota]) => `<li><div class="ing"><span class="ing-ico">${V.icon(iid, 40)}</span>
+              <span class="ing-txt"><b>${esc(ING[iid].nombre)} ${tag(nota)}</b><span>${esc(q)}</span></span></div></li>`
+          )
+          .join('')}</ul>
+      </section>
+      <section class="block">
+        <h2>Preparación</h2>
+        <ol class="steps">${i.pasos.map((p) => `<li><span>${esc(p)}</span></li>`).join('')}</ol>
+      </section>
+      <section class="block note" data-tipo="${i.tipo[0]}"><h2>Consejo</h2><p>${esc(i.tip)}</p></section>
+      ${i.vascoNota ? `<section class="block plain"><h2>Para ${esc(nombre())}</h2><p>${esc(i.vascoNota)}</p></section>` : ''}
+      <div class="btn-row">
+        ${i.faltan.length ? `<button class="btn primary" data-act="refri-falta" data-ids="${i.faltan.join(',')}">${V.ui('mas', 18)} Agregar lo que falta</button>` : ''}
+        <button class="btn soft" data-act="idea-guardar" data-id="${i.id}" aria-pressed="${guardada}">${V.ui('corazon', 18)} ${guardada ? 'Guardada' : 'Guardar idea'}</button>
+      </div>
+      <p class="hint">La app armó esta idea juntando lo que tienes con formas de cocinar de casa. Ajusta las cantidades a tu gusto.</p>`);
+    sheetCtx = { kind: 'idea', id };
   }
   function addRefri(id) {
     if (!S.refri.includes(id)) S.refri.push(id);
@@ -978,7 +1072,7 @@
     sheet.hidden = true;
     document.body.style.overflow = '';
     sheetCtx = null;
-    if (kind === 'refri' && currentRoute === 'refri') renderRefri();
+    if ((kind === 'refri' || kind === 'idea') && currentRoute === 'refri') renderRefri();
     if (!fromHistory && history.state && history.state.sheet) {
       try {
         history.back();
@@ -1293,6 +1387,36 @@
       case 'refri-falta': {
         const nuevos = agregarExtras(el.dataset.ids.split(','));
         toast(nuevos.length ? `Agregado a la lista: ${enLista(nuevos.map(corto))}` : 'Ya estaba en la lista');
+        break;
+      }
+      case 'idea-open':
+        openIdea(el.dataset.id);
+        break;
+      case 'idea-guardar': {
+        const id = el.dataset.id;
+        const i = ui.ideas[id] || S.ideas.find((x) => x.id === id);
+        if (!i) break;
+        if (S.ideas.some((x) => x.id === id)) {
+          S.ideas = S.ideas.filter((x) => x.id !== id);
+          toast('Idea quitada');
+        } else {
+          S.ideas = [JSON.parse(JSON.stringify(i))].concat(S.ideas).slice(0, 30);
+          toast('Idea guardada en Mi refri');
+        }
+        save();
+        openIdea(id);
+        break;
+      }
+      case 'idea-del':
+        S.ideas = S.ideas.filter((x) => x.id !== el.dataset.id);
+        save();
+        renderRefriRes();
+        break;
+      case 'ia-copy': {
+        const q = preguntaIA();
+        const done = () => toast('Pregunta copiada: pégala en Claude');
+        if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(q).then(done, () => toast('No se pudo copiar'));
+        else toast('No se pudo copiar');
         break;
       }
 

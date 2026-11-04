@@ -27,6 +27,12 @@ Arriba se elige de quién es el menú: **Vasco** o **Papás**.
   - **Puedes preparar ya**: platos que salen con lo que tienes.
   - **Te falta poco**: platos a los que les faltan 1 o 2 ingredientes, y cuáles son, con un
     botón para mandarlos a la lista del mercado.
+  - Además de las recetas de la app, **inventa platos nuevos** con lo que tienes (por ejemplo,
+    con fideos y atún: fideos con atún al ajo y orégano, ensalada fría de fideos con atún,
+    arroz chaufa de atún, y "tallarines rojos con atún: te falta tomate"). Cada idea trae
+    ingredientes con cantidades, pasos y cómo adaptarla para Vasco, y se puede guardar.
+  - Si quieres más ideas, un botón arma la pregunta con lo que tienes y la abre en Claude
+    (necesita internet).
   - Se elige para quién se cocina: papás, Vasco o los dos. Si son los dos, junta el plato de
     los papás con la versión de Vasco.
 - **Compras**: la lista del mercado de la semana para toda la familia, solo Vasco o solo los
@@ -63,6 +69,19 @@ Revisa cada receta ingrediente por ingrediente:
 
 Ordena las sugerencias por cuántos de tus ingredientes usa y por si tienes el ingrediente
 principal (la proteína o la menestra).
+
+Para las **ideas nuevas** (`js/ideas.js`) usa 18 plantillas de cocina casera: chaufa, fideos
+salteados, tallarines rojos, ensalada fría, tortilla, huevos revueltos, saltado, guiso, sopa,
+sánguche, causa, a la plancha, puré, menestras guisadas, arroz con verduras, batido, avena con
+fruta y ensalada de frutas. Cada plantilla tiene ingredientes que necesita sí o sí (por ejemplo,
+tallarines rojos: fideos y tomate) y otros que suma si los tienes. El generador:
+
+- llena cada plantilla con lo de tu refri y lo básico de la despensa;
+- escribe el nombre, las cantidades (2 adultos o una porción de Vasco) y los pasos;
+- quita la sal, el sillao y el ají cuando es para Vasco;
+- respeta las alergias;
+- si solo falta 1 ingrediente, te dice cuál;
+- no te pide comprar otra proteína si el plato deja sin usar la que ya tienes.
 
 ## Fuentes
 
@@ -105,14 +124,15 @@ Es HTML, CSS y JavaScript sin dependencias ni compilación.
 | `js/guia.js` | Horarios, guía, consejos y fuentes de Vasco |
 | `js/planner.js` | Perfiles, reglas del menú semanal y lista de compras |
 | `js/cocina.js` | Motor de Mi refri |
+| `js/ideas.js` | Plantillas y generador de platos nuevos para Mi refri |
 | `js/icons.js` | Ilustraciones SVG de alimentos, platos y avatares |
 | `js/app.js` | Pantallas y navegación |
 | `css/app.css` | Estilos (modo claro y oscuro) |
 | `sw.js` | Funcionamiento sin internet |
 
 Para probarla en la computadora, ejecuta `python3 -m http.server` en esta carpeta y abre
-`http://localhost:8000`. Al cambiar archivos, sube la versión en `sw.js` (`familia-v4` →
-`familia-v5`) para que los celulares reciban la actualización.
+`http://localhost:8000`. Al cambiar archivos, sube la versión en `sw.js` (`familia-v5` →
+`familia-v6`) para que los celulares reciban la actualización.
 
 Herramientas de desarrollo en `tools/` (necesitan Node y Playwright):
 

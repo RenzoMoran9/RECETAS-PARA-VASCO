@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const ctx = { window: {}, console };
 vm.createContext(ctx);
-for (const f of ['ingredientes', 'icons', 'recetas', 'guia', 'papas', 'planner', 'cocina'])
+for (const f of ['ingredientes', 'icons', 'recetas', 'guia', 'papas', 'planner', 'cocina', 'ideas'])
   vm.runInContext(fs.readFileSync(new URL(`../js/${f}.js`, import.meta.url), 'utf8'), ctx);
 const V = ctx.window.VASCO;
 let fails = 0;
@@ -90,6 +90,45 @@ res = cocinar([]);
 ok(!res.listos.length && !res.casi.length, 'sin ingredientes no sugiere nada');
 console.log('buscar "pa":', V.buscarIngrediente('pa').map((id) => V.ING[id].nombre).join(', '));
 ok(V.buscarIngrediente('limon')[0] === 'limon', 'buscador sin tildes');
+
+/* ---- Ideas nuevas (generador) ---- */
+const inventar = (tengo, para = 'papas', avoid = []) => V.inventar({ tengo, basicos: V.BASICOS_DEFAULT, para, avoid, ahora: new Date(2026, 10, 4, 13) });
+let ideas = inventar(['fideos', 'atun']);
+console.log('fideos+atún → ideas:', ideas.listos.map((i) => i.nombre), '| faltan 1:', ideas.casi.map((i) => `${i.nombre} (${i.faltan})`));
+ok(ideas.listos.some((i) => i.nombre === 'Fideos con atún al ajo y orégano'), 'fideos con atún');
+ok(ideas.listos.some((i) => i.nombre === 'Arroz chaufa de atún'), 'chaufa de atún (arroz de la despensa)');
+ok(ideas.casi.some((i) => i.nombre === 'Tallarines rojos con atún' && i.faltan[0] === 'tomate'), 'tallarines rojos: falta tomate');
+ok(ideas.casi.some((i) => i.nombre === 'Tortilla de atún' && i.faltan[0] === 'huevo'), 'tortilla de atún: falta huevo');
+ideas = inventar(['res', 'papa', 'tomate']);
+ok(!ideas.casi.some((i) => i.faltan[0] === 'atun' || i.faltan[0] === 'pollo'), 'no pide otra proteína si ya tienes carne');
+ideas = inventar(['fideos', 'atun'], 'papas', ['pescado']);
+ok(!ideas.listos.concat(ideas.casi).some((i) => i.ing.some(([id]) => ['atun', 'pescado', 'trucha'].includes(id))), 'ideas respetan alergias');
+ideas = inventar(['pollo', 'zanahoria', 'vainita'], 'vasco');
+ok(ideas.listos.length >= 3, 'ideas para Vasco');
+// Prueba con miles de combinaciones al azar: textos completos y sin datos rotos
+const refriIds = Object.keys(V.ING).filter((id) => !V.BASICOS_DEFAULT.includes(id));
+let seedR = 7;
+const rnd = () => ((seedR = (seedR * 16807) % 2147483647) / 2147483647);
+let totalIdeas = 0, conIdeas = 0;
+for (let n = 0; n < 3000; n++) {
+  const k = 1 + Math.floor(rnd() * 6);
+  const tengo = [...new Set(Array.from({ length: k }, () => refriIds[Math.floor(rnd() * refriIds.length)]))];
+  const para = ['papas', 'vasco', 'ambos'][n % 3];
+  const res2 = inventar(tengo, para);
+  const all = res2.listos.concat(res2.casi);
+  if (res2.listos.length) conIdeas++;
+  totalIdeas += all.length;
+  for (const i of all) {
+    const txt = [i.nombre, i.tip, i.vascoNota].concat(i.pasos).filter(Boolean).join(' ');
+    if (/undefined|null|NaN|\[object/.test(txt) || i.pasos.length < 2 || !i.nombre || i.ing.some(([id]) => !V.ING[id]) || /\s{2,}| ,|\.\./.test(txt)) {
+      ok(false, `idea rota con ${tengo.join('+')}: ${i.nombre} → ${txt.slice(0, 160)}`);
+      break;
+    }
+    if (para === 'vasco' && /Echa 2 cucharadas de sillao|1 de vinagre/.test(txt)) ok(false, `idea de Vasco con sillao: ${i.nombre}`);
+    if (i.faltan.length > 1) ok(false, 'idea con más de 1 faltante');
+  }
+}
+console.log(`3000 refris al azar: ${totalIdeas} ideas, con al menos una lista para preparar en ${conIdeas} de 3000`);
 
 /* ---- Lista del mercado ---- */
 const sl = V.shoppingList([{ P: V.PERFILES.vasco, days: V.generateWeek(V.PERFILES.vasco, 1, {}) }, { P: V.PERFILES.papas, days: V.generateWeek(V.PERFILES.papas, 1, {}) }]);
