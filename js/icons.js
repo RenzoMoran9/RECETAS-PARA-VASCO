@@ -477,6 +477,121 @@
     agua:
       `<path d="M32 8c-8 12-16 21-16 31 0 9 7 16 16 16s16-7 16-16C48 29 40 20 32 8z" fill="#5BB4E5"/>` +
       shine(25, 38, 3, 7, 15, 0.45),
+
+    /* ---------- Cocina de los papás ---------- */
+    lechuga:
+      `<circle cx="32" cy="38" r="21" fill="#6DB84F"/>` +
+      `<path d="M12 37c2-13 12-21 20-21s18 8 20 21c-6-6-13-9-20-9s-14 3-20 9z" fill="#9CD06B"/>` +
+      `<path d="M19 45c3-8 8-12 13-12s10 4 13 12c-4-3-8-4-13-4s-9 1-13 4z" fill="#C6E69A"/>` +
+      line('M32 31v25M23 42l9 7M41 42l-9 7', '#4E9A3A', 1.6) +
+      shine(20, 30, 3, 5, 30, 0.3),
+    pepino:
+      `<path d="M7 40c-2-4 0-7 4-9l27-15c5-3 11 3 7 8L17 47c-4 3-8 0-10-7z" fill="#3E8E47"/>` +
+      [[16, 38], [24, 33], [32, 28], [20, 43], [28, 38]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1" fill="#8CCB6A"/>`).join('') +
+      `<circle cx="46" cy="44" r="12" fill="#3E8E47"/><circle cx="46" cy="44" r="10" fill="#DDF1BE"/>` +
+      [[46, 39], [50, 42], [50, 47], [46, 49.5], [42, 47], [42, 42]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="1.1" ry="1.8" fill="#A9D27A"/>`).join(''),
+    pimiento:
+      `<path d="M20 24c-6 4-7 16-3 24 3 6 9 6 12 3 2 2 4 2 6 0 3 3 9 3 12-3 4-8 3-20-3-24-4-3-9-2-12 0-3-2-8-3-12 0z" fill="#E33B2E"/>` +
+      line('M24 30c-1 6-1 12 1 17M40 30c1 6 1 12-1 17', '#B92A22', 1.6) +
+      `<path d="M30 22c0-6 2-9 6-10l1 3c-3 1-4 4-4 7z" fill="#3E8E47"/>` +
+      shine(21, 32, 2.4, 6, 10, 0.35),
+    champinon:
+      `<path d="M10 34c0-12 10-20 22-20s22 8 22 20c0 3-2 4-5 4H15c-3 0-5-1-5-4z" fill="#B98A5E"/>` +
+      `<path d="M24 38h16l-2 16c0 2-2 3-4 3h-4c-2 0-4-1-4-3z" fill="#F1E6D2"/>` +
+      [[22, 26], [34, 21], [43, 29], [29, 31]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="2" fill="#D9B78F"/>`).join('') +
+      shine(20, 24, 5, 2.4, -25, 0.3),
+    habas:
+      `<path d="M7 40c6-16 37-25 51-14-6 16-39 25-51 14z" fill="#6DAA3E"/>` +
+      `<path d="M12 39c8-10 31-17 42-10-6 11-33 17-42 10z" fill="#E7F2CF"/>` +
+      [[22, 37], [32, 34], [42, 31]].map(([x, y]) => `<ellipse cx="${x}" cy="${y}" rx="5" ry="4" fill="#A9CF6A"/>` + shine(x - 1.6, y - 1.2, 1.6, 1.1, 0, 0.5)).join(''),
+    'aji-amarillo':
+      `<path d="M44 14c4 2 5 6 3 10L22 54c-2 3-6 4-8 2s-1-6 1-8L38 18c2-3 4-5 6-4z" fill="#F5A623"/>` +
+      `<path d="M41 15c2-3 6-3 8 0-3 2-5 2-8 0z" fill="#4FA34A"/>` +
+      line('M45 14c1-4 4-6 7-6', '#3E8E47', 3) +
+      shine(36, 26, 1.6, 6, 40, 0.4),
+    'aji-limo':
+      `<path d="M24 22c6 0 9 6 8 14-1 9-5 16-8 16s-7-7-8-16c-1-8 2-14 8-14z" fill="#E53935"/>` +
+      `<path d="M42 26c6 0 9 6 8 13-1 8-5 14-8 14s-7-6-8-14c-1-7 2-13 8-13z" fill="#F5B800"/>` +
+      line('M24 22c0-4 2-7 5-8M42 26c0-4 2-6 4-7', '#3E8E47', 2.6) +
+      shine(21, 31, 1.4, 4, 0, 0.45) +
+      shine(39, 34, 1.4, 4, 0, 0.45),
+    rocoto:
+      `<path d="M32 20c12 0 20 8 20 18s-8 17-20 17-20-7-20-17 8-18 20-18z" fill="#D62828"/>` +
+      line('M26 24c-3 8-3 20 1 29M38 24c3 8 3 20-1 29', '#A51E1E', 1.6) +
+      `<path d="M26 21c2-4 10-4 12 0-4 2-8 2-12 0z" fill="#3E8E47"/>` +
+      line('M32 20c0-5 2-8 6-10', '#3E7D33', 3.4) +
+      shine(22, 32, 2.6, 6, 15, 0.35),
+    galleta:
+      `<rect x="9" y="24" width="30" height="30" rx="3" fill="#DDB97E" transform="rotate(-8 24 39)"/>` +
+      `<rect x="25" y="14" width="30" height="30" rx="3" fill="#F0D3A0" transform="rotate(10 40 29)"/>` +
+      [[33, 22], [41, 23], [49, 25], [32, 30], [40, 31], [48, 33], [31, 38], [39, 39], [47, 41]]
+        .map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.1" fill="#C99B5A"/>`)
+        .join(''),
+    atun:
+      `<path d="M12 26v17c0 3.3 9 6 20 6s20-2.7 20-6V26z" fill="#8FA3B5"/>` +
+      `<path d="M12 32c0 3.3 9 6 20 6s20-2.7 20-6v8c0 3.3-9 6-20 6s-20-2.7-20-6z" fill="#2F6FA8"/>` +
+      `<path d="M24 40c3-3 8-4 12-2l4-2v6l-4-2c-4 2-9 1-12-2z" fill="#FFFFFF" opacity=".85"/>` +
+      `<ellipse cx="32" cy="26" rx="20" ry="6" fill="#C9D3DD"/><ellipse cx="32" cy="26" rx="16" ry="4.2" fill="#AEBBC8"/>` +
+      `<path d="M38 24.6c2-1.6 6-1.6 7 0" stroke="#7E8E9E" stroke-width="2" fill="none" stroke-linecap="round"/>`,
+    aceituna:
+      `<ellipse cx="22" cy="40" rx="9" ry="12" transform="rotate(-20 22 40)" fill="#4B2A4F"/>` +
+      `<ellipse cx="40" cy="38" rx="9" ry="12" transform="rotate(18 40 38)" fill="#5E3462"/>` +
+      `<ellipse cx="31" cy="50" rx="8" ry="10" transform="rotate(80 31 50)" fill="#3E2241"/>` +
+      shine(19, 35, 1.8, 3.6, -20, 0.4) +
+      shine(37, 33, 1.8, 3.6, 18, 0.4) +
+      `<path d="M30 14c6-4 13-3 15 0-5 4-11 4-15 0z" fill="#6E9E40"/>`,
+    'aji-panca':
+      `<path d="M45 12c4 2 6 7 3 12L24 54c-2 3-6 4-8 2s-1-6 1-8L38 16c2-3 5-5 7-4z" fill="#7A1F2B"/>` +
+      line('M38 22l-3 4M33 30l-3 4M28 38l-3 4M23 46l-2 3', '#5A1520', 1.4) +
+      `<path d="M42 13c2-3 6-3 8 0-3 2-5 2-8 0z" fill="#6B7B3A"/>` +
+      shine(37, 25, 1.4, 5, 40, 0.3),
+    sal:
+      `<path d="M22 25h20l3 27c0 3-2 5-5 5H24c-3 0-5-2-5-5z" fill="#F7F8FA"/>` +
+      `<path d="M22 25h20l3 27c0 3-2 5-5 5H24c-3 0-5-2-5-5z" fill="none" stroke="#C9D3DD" stroke-width="1.6"/>` +
+      `<path d="M23 25c0-6 4-10 9-10s9 4 9 10z" fill="#9AA8B6"/>` +
+      [[29, 19], [32, 17.6], [35, 19], [32, 21.4]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r=".9" fill="#5D6B7A"/>`).join('') +
+      `<rect x="24" y="34" width="16" height="10" rx="2" fill="#6FA8DC" opacity=".7"/>`,
+    pimienta: bowlOf('pimienta', { mound: '#4A4642', dot: '#2B2724', r: 1.1, wood: '#F4F1E8', inside: '#CFC7B3' }),
+    comino: bowlOf('comino', { mound: '#B98A3E', dot: '#8E6428', shape: 'oval', r: 1.1, wood: '#F4F1E8', inside: '#CFC7B3' }),
+    oregano: bowlOf('oregano', { mound: '#7A9145', dot: '#56702E', shape: 'chunk', r: 1.1, wood: '#F4F1E8', inside: '#CFC7B3' }),
+    pallar: bowlOf('pallar', { mound: '#EDE3CC', dot: '#FBF6EA', shape: 'oval', r: 2.4, wood: '#D06A4C', inside: '#8E3F2A' }),
+    sillao:
+      `<rect x="27" y="6" width="10" height="6" rx="1.5" fill="#D32F2F"/>` +
+      `<path d="M28 12h8v6c5 2 8 6 8 11v24c0 3-2 5-5 5H25c-3 0-5-2-5-5V29c0-5 3-9 8-11z" fill="#3B2418"/>` +
+      `<rect x="23" y="34" width="18" height="12" rx="2" fill="#F4E3C1"/>` +
+      `<rect x="26" y="38" width="12" height="2.4" rx="1.2" fill="#D32F2F"/>` +
+      shine(25, 26, 1.4, 4, 0, 0.35),
+    vinagre:
+      `<rect x="28" y="5" width="8" height="6" rx="1.5" fill="#4E9A3A"/>` +
+      `<path d="M29 11h6v9c4 2 6 5 6 9v24c0 3-2 5-5 5h-8c-3 0-5-2-5-5V29c0-4 2-7 6-9z" fill="#F7F1DC"/>` +
+      `<path d="M23 36h18v17c0 2.4-1.6 4-4 4h-10c-2.4 0-4-1.6-4-4z" fill="#E4CF8A"/>` +
+      `<path d="M29 11h6v9c4 2 6 5 6 9v24c0 3-2 5-5 5h-8c-3 0-5-2-5-5V29c0-4 2-7 6-9z" fill="none" stroke="#CFC3A0" stroke-width="1.4"/>` +
+      shine(26, 30, 1.2, 4, 0, 0.5),
+  };
+
+  /* Avatares para elegir de quién es el menú */
+  V.AVATAR = {
+    vasco:
+      '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#FDE3D6"/>' +
+      '<circle cx="14.5" cy="37" r="4" fill="#E8AE84"/><circle cx="49.5" cy="37" r="4" fill="#E8AE84"/>' +
+      '<circle cx="32" cy="36" r="18" fill="#F2C29B"/>' +
+      '<path d="M27 19c1-6 10-6 10 0-3-2.6-6-1.6-6 1.6" stroke="#5A3A25" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="25" cy="35" r="2.3" fill="#26233A"/><circle cx="39" cy="35" r="2.3" fill="#26233A"/>' +
+      '<path d="M26 43q6 5 12 0" stroke="#26233A" stroke-width="2.4" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="20.5" cy="41" r="3" fill="#F49A9A" opacity=".8"/><circle cx="43.5" cy="41" r="3" fill="#F49A9A" opacity=".8"/></svg>',
+    papas:
+      '<svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" fill="#DDF0D5"/>' +
+      '<path d="M9 44c0-15 6-24 14-24s14 9 14 24v8H9z" fill="#3A2A20"/>' +
+      '<path d="M4 64c0-9 8-14 19-14s19 5 19 14z" fill="#E8632B"/>' +
+      '<circle cx="23" cy="35" r="10" fill="#E9B48A"/>' +
+      '<path d="M13 33c1-8 5-12 10-12s9 3 10 9c-6-1-12-3-15-7-1 4-3 7-5 10z" fill="#3A2A20"/>' +
+      '<path d="M24 64c0-9 8-14 19-14s19 5 19 14z" fill="#4E9A3A"/>' +
+      '<circle cx="43" cy="37" r="10.5" fill="#D9A27A"/>' +
+      '<path d="M32.4 35c0-9 4.6-13 10.6-13s10.6 4 10.6 13c-3-4-6.6-5.4-10.6-5.4s-7.6 1.4-10.6 5.4z" fill="#2B211B"/>' +
+      '<circle cx="19.6" cy="35.6" r="1.6" fill="#26233A"/><circle cx="26.4" cy="35.6" r="1.6" fill="#26233A"/>' +
+      '<path d="M19.6 40q3.4 3 6.8 0" stroke="#26233A" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+      '<circle cx="39.4" cy="37.6" r="1.6" fill="#26233A"/><circle cx="46.6" cy="37.6" r="1.6" fill="#26233A"/>' +
+      '<path d="M39.4 42q3.6 3 7.2 0" stroke="#26233A" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>',
   };
 
   /* Íconos de interfaz (trazo, color heredado) */
@@ -501,6 +616,7 @@
     canasta: '<path d="M4 9h16l-1.6 9.4c-.2 1.4-1.4 2.6-2.8 2.6H8.4c-1.4 0-2.6-1.2-2.8-2.6z"/><path d="M8.5 9l3.5-5 3.5 5M9 13v4M15 13v4M12 13v4"/>',
     instalar: '<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5"/><path d="M5 19h14"/>',
     hoja: '<path d="M5 19c0-9 5-14 14-14 0 9-5 14-14 14z"/><path d="M5 19l8-8"/>',
+    refri: '<rect x="5.5" y="2.5" width="13" height="19" rx="2.5"/><path d="M5.5 10h13M9 5.5v2M9 13v3"/>',
   };
 
   V.icon = function (id, size, cls) {
@@ -518,6 +634,7 @@
   const MEAL_TINT = {
     desayuno: ['#FFE9B8', '#F4B63F'],
     refrigerio: ['#DDF0CB', '#7DBB4B'],
+    lonche: ['#DDF0CB', '#7DBB4B'],
     almuerzo: ['#FFD9C4', '#E8632B'],
     cena: ['#E6DAF3', '#7B4FA8'],
   };

@@ -1,5 +1,5 @@
 /* Guarda la app en el teléfono para que funcione sin internet. */
-const VERSION = 'vasco-v3';
+const VERSION = 'familia-v4';
 const APP = [
   './',
   'index.html',
@@ -8,7 +8,9 @@ const APP = [
   'js/icons.js',
   'js/recetas.js',
   'js/guia.js',
+  'js/papas.js',
   'js/planner.js',
+  'js/cocina.js',
   'js/app.js',
   'manifest.webmanifest',
   'img/icon.svg',

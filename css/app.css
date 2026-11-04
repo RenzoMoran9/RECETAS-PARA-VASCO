@@ -100,6 +100,8 @@
 [data-slot='almuerzo'], [data-tipo='almuerzo'] { --c: var(--c-almuerzo); --t: var(--t-almuerzo); }
 [data-slot='mt'] { --c: var(--c-mt); --t: var(--t-mt); }
 [data-slot='cena'], [data-tipo='cena'] { --c: var(--c-cena); --t: var(--t-cena); }
+[data-slot='lonche'] { --c: var(--c-mt); --t: var(--t-mt); }
+[data-tipo='lonche'] { --c: var(--c-mm); --t: var(--t-mm); }
 
 *,
 *::before,
@@ -216,6 +218,7 @@ main {
   cursor: pointer;
   text-decoration: none;
 }
+.btn-row > .btn { white-space: nowrap; }
 .btn.primary { background: var(--accent); color: var(--accent-ink); }
 .btn.soft { background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
 .btn.ghost { background: transparent; color: var(--ink-2); border: 1.5px dashed var(--line); }
@@ -691,3 +694,115 @@ details.acc li::before { content: ''; position: absolute; left: 2px; top: 0.6em;
 }
 details.acc.help { box-shadow: none; background: var(--surface-2); }
 details.acc.help summary { font-size: 1rem; }
+
+/* ---------- Perfiles: Vasco y papás ---------- */
+.perfiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.perfil {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 8px 12px 8px 8px;
+  border-radius: var(--r-lg);
+  border: 2px solid transparent;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  text-align: left;
+}
+.perfil[aria-selected='true'] { border-color: var(--accent); background: var(--accent-soft); }
+.avatar { width: 42px; height: 42px; border-radius: 50%; overflow: hidden; flex: none; }
+.avatar svg { width: 100%; height: 100%; display: block; }
+.perfil-txt { display: grid; min-width: 0; line-height: 1.25; }
+.perfil-txt b { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.perfil-txt small { color: var(--ink-2); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+svg.mini-av { width: 28px; height: 28px; border-radius: 50%; flex: none; vertical-align: middle; }
+.notice .foods svg.mini-av { width: 40px; height: 40px; }
+.block h2 svg.mini-av { margin-right: 4px; vertical-align: -6px; }
+.badge.olla { background: var(--accent-soft); color: var(--accent); }
+.who { display: inline-flex; font-size: 0.75rem; font-weight: 800; padding: 1px 8px; border-radius: 999px; letter-spacing: 0.02em; }
+.who.vasco { background: var(--t-almuerzo); color: var(--c-almuerzo); }
+.who.papas { background: var(--ok-soft); color: var(--ok); }
+.tags .who { text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 10px; }
+.link-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.link-row b { color: var(--accent); }
+.en-refri { font-family: var(--font-body); font-size: 0.72rem; font-weight: 800; color: var(--ok); background: var(--ok-soft); padding: 1px 6px; border-radius: 999px; white-space: nowrap; }
+.label { font-weight: 800; }
+
+/* ---------- Mi refri ---------- */
+.sec-title { font-size: var(--step-1); display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.sec-title .count { font-family: var(--font-body); background: var(--surface-2); border-radius: 999px; padding: 0 9px; }
+.sug { display: flex; flex-wrap: wrap; gap: 6px; }
+.sug:empty { display: none; }
+.sug .filter { min-height: 40px; padding: 0 12px 0 6px; }
+.sel-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.sel-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 3px 8px 3px 3px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--ok-soft);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.sel-chip .ico { width: 30px; height: 30px; border-radius: 50%; background: var(--surface); display: grid; place-items: center; }
+.sel-chip .x { color: var(--ink-2); display: grid; }
+.basicos { padding: 0 14px 14px; display: grid; gap: 10px; }
+.ejemplos { display: grid; gap: 8px; }
+.ejemplo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+.ej-icons { display: flex; gap: 2px; flex: none; }
+.match-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.match { background: var(--surface); border-radius: var(--r-md); box-shadow: var(--shadow); overflow: hidden; }
+.match-main { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; padding: 10px; text-decoration: none; align-items: center; }
+.match-main .opt-art { width: 84px; height: 66px; }
+.uses { font-size: 0.9rem; }
+.match-miss { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-top: 1px dashed var(--line); }
+.miss-label { font-weight: 800; font-size: var(--step--1); color: var(--accent); }
+.miss {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px 2px 3px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.miss svg.food { width: 22px; height: 22px; }
+.match-miss .chip-btn { margin-left: auto; background: var(--accent); color: var(--accent-ink); }
+.match-miss .chip-btn .ui { color: currentColor; }
+
+/* ---------- Plato saludable y compras ---------- */
+.plato-svg { display: block; width: 100%; max-width: 300px; margin: 0 auto; }
+.extra-del { border: 0; background: transparent; color: var(--ink-2); cursor: pointer; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 50%; }
+.tabbar-in { grid-template-columns: repeat(5, minmax(0, 1fr)); max-width: 620px; }
+.tab { font-size: 0.74rem; }
+.tab .pip { width: 48px; }

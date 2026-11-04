@@ -1,4 +1,4 @@
-/* Ingredientes del mercado peruano usados en las recetas de Vasco.
+/* Ingredientes del mercado peruano usados en las recetas de la familia.
    cat: categoría para la lista de compras. basico: suele haber en casa. */
 (function () {
   const V = (window.VASCO = window.VASCO || {});
@@ -56,6 +56,14 @@
     hierbabuena: I('Hierbabuena', 'verduras'),
     albahaca: I('Albahaca', 'verduras'),
     kion: I('Kion', 'verduras'),
+    lechuga: I('Lechuga', 'verduras'),
+    pepino: I('Pepino', 'verduras'),
+    pimiento: I('Pimiento', 'verduras'),
+    champinon: I('Champiñones', 'verduras'),
+    habas: I('Habas frescas', 'verduras'),
+    'aji-amarillo': I('Ají amarillo (fresco o en pasta)', 'verduras'),
+    'aji-limo': I('Ají limo', 'verduras'),
+    rocoto: I('Rocoto', 'verduras'),
 
     // Tubérculos
     papa: I('Papa blanca', 'tuberculos'),
@@ -75,22 +83,25 @@
     pan: I('Pan francés', 'granos'),
     'maiz-morado': I('Maíz morado', 'granos'),
     chuno: I('Chuño (fécula de papa)', 'granos'),
+    galleta: I('Galleta de soda', 'granos'),
 
     // Menestras
     lentejas: I('Lentejas', 'menestras'),
     frejol: I('Frejol canario', 'menestras'),
     garbanzo: I('Garbanzos', 'menestras'),
     'arveja-partida': I('Arveja partida', 'menestras'),
+    pallar: I('Pallares', 'menestras'),
 
     // Carnes, pescado y huevos
     pollo: I('Pollo', 'proteinas'),
-    higado: I('Hígado de pollo', 'proteinas'),
-    sangrecita: I('Sangrecita de pollo', 'proteinas'),
+    higado: I('Hígado (de pollo o de res)', 'proteinas'),
+    sangrecita: I('Sangrecita', 'proteinas'),
     bazo: I('Bazo de res', 'proteinas'),
     res: I('Carne de res', 'proteinas'),
     pescado: I('Pescado (jurel, bonito, caballa)', 'proteinas'),
     trucha: I('Trucha', 'proteinas'),
     huevo: I('Huevos', 'proteinas'),
+    atun: I('Atún en lata (en agua)', 'proteinas'),
 
     // Lácteos
     leche: I('Leche entera', 'lacteos'),
@@ -101,20 +112,55 @@
     // Despensa
     aceite: I('Aceite vegetal o de oliva', 'despensa', { basico: true }),
     canela: I('Canela en rama y molida', 'despensa', { basico: true }),
-    mani: I('Pasta de maní (100 % maní)', 'despensa'),
+    mani: I('Maní o pasta de maní (sin sal)', 'despensa'),
     pecanas: I('Pecanas', 'despensa'),
     palillo: I('Palillo (cúrcuma)', 'despensa', { basico: true }),
+    aceituna: I('Aceitunas de botija', 'despensa'),
+    'aji-panca': I('Ají panca en pasta', 'despensa'),
+    sal: I('Sal yodada', 'despensa', { basico: true }),
+    pimienta: I('Pimienta', 'despensa', { basico: true }),
+    comino: I('Comino', 'despensa', { basico: true }),
+    oregano: I('Orégano seco', 'despensa', { basico: true }),
+    sillao: I('Sillao', 'despensa', { basico: true }),
+    vinagre: I('Vinagre', 'despensa', { basico: true }),
   };
 
   // Alimentos de origen animal ricos en hierro (prioridad MINSA contra la anemia)
   V.HIERRO_ANIMAL = ['sangrecita', 'higado', 'bazo', 'res', 'pescado', 'trucha'];
-  V.PESCADOS = ['pescado', 'trucha'];
+  V.PESCADOS = ['pescado', 'trucha', 'atun'];
 
   V.ALERGENOS = {
     huevo: { nombre: 'Huevo', ing: ['huevo'] },
-    pescado: { nombre: 'Pescado', ing: ['pescado', 'trucha'] },
+    pescado: { nombre: 'Pescado', ing: ['pescado', 'trucha', 'atun'] },
     lacteos: { nombre: 'Lácteos', ing: ['leche', 'queso', 'yogurt', 'mantequilla'] },
-    gluten: { nombre: 'Gluten (trigo, avena)', ing: ['pan', 'fideos', 'avena'] },
+    gluten: { nombre: 'Gluten (trigo, avena)', ing: ['pan', 'fideos', 'avena', 'galleta'] },
     mani: { nombre: 'Maní y frutos secos', ing: ['mani', 'pecanas'] },
+  };
+
+  /* Mi refri: lo que casi siempre hay en una cocina limeña (se puede cambiar en la app) */
+  V.BASICOS_DEFAULT = ['aceite', 'sal', 'pimienta', 'comino', 'oregano', 'ajo', 'cebolla', 'limon', 'arroz', 'sillao', 'vinagre', 'canela', 'palillo'];
+
+  /* Mi refri: qué puede reemplazar a qué sin cambiar el plato */
+  V.SUSTITUTOS = {
+    papa: ['papa-amarilla'],
+    'papa-amarilla': ['papa'],
+    espinaca: ['acelga'],
+    acelga: ['espinaca'],
+    pescado: ['trucha'],
+    trucha: ['pescado'],
+    culantro: ['perejil'],
+    perejil: ['culantro'],
+    'aji-limo': ['rocoto', 'aji-amarillo'],
+    rocoto: ['aji-limo'],
+    frejol: ['pallar'],
+    pallar: ['frejol'],
+    lentejas: ['arveja-partida'],
+    'arveja-partida': ['lentejas'],
+    zapallito: ['zanahoria'],
+    pecanas: ['mani'],
+    mani: ['pecanas'],
+    mandarina: ['naranja'],
+    naranja: ['mandarina'],
+    pan: ['galleta'],
   };
 })();

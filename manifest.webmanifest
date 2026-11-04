@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Recetas para Vasco",
-  "short_name": "Recetas Vasco",
-  "description": "Menú semanal, recetas peruanas y guía de alimentación para Vasco (12 a 23 meses).",
+  "name": "Recetas para la familia",
+  "short_name": "Recetas",
+  "description": "Menú semanal, recetas peruanas fáciles y guía de alimentación para Vasco y sus papás, y Mi refri para saber qué cocinar con lo que hay en casa.",
   "lang": "es-PE",
   "start_url": "./",
   "scope": "./",
