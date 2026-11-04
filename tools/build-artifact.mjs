@@ -10,7 +10,7 @@ const fonts = html.match(/<link rel="stylesheet" href="https:\/\/fonts\.googleap
 const css = fs.readFileSync(path.join(root, 'css/app.css'), 'utf8');
 const scripts = [...html.matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => fs.readFileSync(path.join(root, m[1]), 'utf8'));
 const page = [
-  '<title>Recetas para Vasco</title>',
+  html.match(/<title>[^<]*<\/title>/)[0],
   '<meta name="claude:viewport-fit-sides" content="cover">',
   fonts,
   `<style>\n${css}\n</style>`,
